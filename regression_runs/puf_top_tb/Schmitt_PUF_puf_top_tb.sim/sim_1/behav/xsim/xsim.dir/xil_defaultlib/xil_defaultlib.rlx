@@ -1,0 +1,12 @@
+0.7
+2020.1
+May 27 2020
+20:09:33
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/regression_runs/puf_top_tb/Schmitt_PUF_puf_top_tb.sim/sim_1/behav/xsim/glbl.v,1590624368,verilog,,,,glbl,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/period_measurement.v,1793853655,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/puf_top.v,,period_measurement,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/puf_top.v,1793721220,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/schmitt_mux.v,,puf_top,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/schmitt_mux.v,1793699274,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/uart_controller.v,,schmitt_mux,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/uart_controller.v,1793701236,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/uart_rx.v,,uart_controller,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/uart_rx.v,1793723812,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/uart_tx.v,,uart_rx,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/uart_tx.v,1793725554,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/testbenches/puf_top_tb.v,,uart_tx,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/testbenches/puf_top_tb.v,1794727757,verilog,,,,puf_top_tb,,,,,,,,

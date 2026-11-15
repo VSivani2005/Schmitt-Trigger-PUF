@@ -1,0 +1,9 @@
+0.7
+2020.1
+May 27 2020
+20:09:33
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/regression_runs/puf_reliability_tb/Schmitt_PUF_puf_reliability_tb.sim/sim_1/behav/xsim/glbl.v,1590624368,verilog,,,,glbl,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/pairwise_response.v,1793702081,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/period_measurement.v,,pairwise_response,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/period_measurement.v,1793853655,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/schmitt_mux.v,,period_measurement,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/schmitt_mux.v,1793699274,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/testbenches/puf_reliability_tb.v,,schmitt_mux,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/testbenches/puf_reliability_tb.v,1794727541,verilog,,,,puf_reliability_tb,,,,,,,,

@@ -1,0 +1,7 @@
+0.7
+2020.1
+May 27 2020
+20:09:33
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/regression_runs/uart_tx_tb/Schmitt_PUF_uart_tx_tb.sim/sim_1/behav/xsim/glbl.v,1590624368,verilog,,,,glbl,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/rtl/uart_tx.v,1793725554,verilog,,C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/testbenches/uart_tx_tb.v,,uart_tx,,,,,,,,
+C:/Users/vsiva/Downloads/Schmitt_PUF_Integration/testbenches/uart_tx_tb.v,1794727542,verilog,,,,uart_tx_tb,,,,,,,,

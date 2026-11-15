@@ -1,0 +1,238 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 03.11.2026 16:20:52
+// Design Name: 
+// Module Name: puf_reliability_tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+`timescale 1ns / 1ps
+
+module puf_reliability_tb;
+
+    reg clk = 0;
+    reg rst = 1'b1;
+    reg [9:0] gpio_inputs = 10'b0;
+
+    reg [3:0] channel_select = 0;
+    reg req_meas = 0;
+
+    wire selected_pin;
+    wire feedback_out;
+
+    wire [23:0] measured_period;
+    wire ack_meas;
+    wire busy;
+
+    reg [239:0] period_values = 240'd0;
+    wire [44:0] response;
+
+    reg [44:0] reference_response;
+
+    integer round_idx;
+    integer gpio_idx;
+    integer bit_idx;
+    integer diff_bits;
+    integer stability_x100;
+    integer sum_stability_x100;
+    integer average_stability_x100;
+    integer measurement_count;
+
+    // 10 MHz clock
+    always #5 clk = ~clk;
+
+    // Simulated GPIO signals
+    always #525  gpio_inputs[0] = ~gpio_inputs[0];
+    always #725  gpio_inputs[1] = ~gpio_inputs[1];
+    always #625  gpio_inputs[2] = ~gpio_inputs[2];
+    always #1125 gpio_inputs[3] = ~gpio_inputs[3];
+    always #1025 gpio_inputs[4] = ~gpio_inputs[4];
+    always #1525 gpio_inputs[5] = ~gpio_inputs[5];
+    always #1325 gpio_inputs[6] = ~gpio_inputs[6];
+    always #2125 gpio_inputs[7] = ~gpio_inputs[7];
+    always #1925 gpio_inputs[8] = ~gpio_inputs[8];
+    always #2325 gpio_inputs[9] = ~gpio_inputs[9];
+
+    // GPIO multiplexer
+    schmitt_mux mux_inst (
+        .gpio_inputs(gpio_inputs),
+        .channel_select(channel_select),
+        .selected_pin(selected_pin)
+    );
+
+    // Period measurement
+    period_measurement measurement_inst (
+        .clk_100mhz(clk),
+         .rst(rst),
+        .req_meas(req_meas),
+        .pin_selected(selected_pin),
+        .pin_out(feedback_out),
+        .data_out(measured_period),
+        .ack_meas(ack_meas),
+        .busy(busy)
+    );
+
+    // Pairwise response generator
+    pairwise_response response_inst (
+        .period_values(period_values),
+        .response(response)
+    );
+
+    // Measure one GPIO
+    task measure_channel;
+        input integer idx;
+
+        begin
+            @(negedge clk);
+            channel_select = idx;
+
+            repeat (2) @(negedge clk);
+
+            req_meas = 1'b1;
+
+            wait (ack_meas == 1'b1);
+
+            period_values[idx*24 +: 24] = measured_period;
+            measurement_count = measurement_count + 1;
+
+            @(negedge clk);
+            req_meas = 1'b0;
+
+            repeat (2) @(negedge clk);
+        end
+    endtask
+
+    initial begin
+
+        $display("==========================================");
+        $display("PUF RESPONSE RELIABILITY TEST");
+        $display("==========================================");
+
+        sum_stability_x100 = 0;
+        measurement_count = 0;
+        reference_response = 45'd0;
+
+        repeat (5) @(negedge clk);
+        rst = 1'b0;
+
+        // Perform 10 measurement rounds
+        for (round_idx = 0; round_idx < 10;
+             round_idx = round_idx + 1) begin
+
+            period_values = 240'd0;
+
+            $display("\nROUND %0d", round_idx + 1);
+
+            // Measure all ten GPIOs
+            for (gpio_idx = 0; gpio_idx < 10;
+                 gpio_idx = gpio_idx + 1) begin
+
+                measure_channel(gpio_idx);
+
+                $display("GPIO %0d = %0d cycles",
+                    gpio_idx,
+                    period_values[gpio_idx*24 +: 24]);
+
+            end
+
+            // Allow combinational response to settle
+            #1;
+
+            $display("Response = %045b", response);
+
+            if (round_idx == 0) begin
+
+                reference_response = response;
+
+                $display("Reference response recorded");
+
+            end
+            else begin
+
+                diff_bits = 0;
+
+                // Compare with first-round response
+                for (bit_idx = 0; bit_idx < 45;
+                     bit_idx = bit_idx + 1) begin
+
+                    if (response[bit_idx] !==
+                        reference_response[bit_idx])
+                        diff_bits = diff_bits + 1;
+
+                end
+
+                stability_x100 =
+                    ((45 - diff_bits) * 10000) / 45;
+
+                sum_stability_x100 =
+                    sum_stability_x100 + stability_x100;
+
+                $display("Different bits = %0d", diff_bits);
+
+                $display("Round stability = %0d.%02d%%",
+                    stability_x100 / 100,
+                    stability_x100 % 100);
+
+            end
+
+        end
+
+        // Average over rounds 2 through 10
+        average_stability_x100 =
+            sum_stability_x100 / 9;
+
+        $display("\n==========================================");
+        $display("RELIABILITY TEST SUMMARY");
+        $display("==========================================");
+
+        $display("Measurement rounds = 10");
+        $display("GPIO inputs = 10");
+        $display("Response bits = 45");
+        $display("Repeated comparisons = 9");
+
+        $display("Average response stability = %0d.%02d%%",
+            average_stability_x100 / 100,
+            average_stability_x100 % 100);
+
+        $display("==========================================");
+        $display("PUF RELIABILITY SIMULATION COMPLETED");
+        $display("==========================================");
+
+        if (measurement_count == 100) begin
+            $display("PASS: Completed all 100 measurements");
+            $display("TEST_RESULT: PASS");
+        end
+        else begin
+            $display("FAIL: Expected 100 measurements, completed %0d",
+                     measurement_count);
+            $display("TEST_RESULT: FAIL");
+        end
+
+        $finish;
+
+    end
+
+    // Watchdog
+    initial begin
+        #2000000;
+        $display("ERROR: Simulation timeout");
+        $display("TEST_RESULT: TIMEOUT");
+        $finish;
+    end
+
+endmodule
