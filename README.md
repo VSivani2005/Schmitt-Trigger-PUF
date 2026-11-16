@@ -333,7 +333,7 @@ Important distinctions:
 - The temperature and reliability experiments are software simulations.
 - The results should not be interpreted as measured physical hardware performance.
 - Physical FPGA validation is a separate stage of the project.
-- The software model and Verilog RTL implementation are separate parts of the current development work; their outputs should not be assumed to be fully integrated.
+
 
 ## 13. Future Work
 
